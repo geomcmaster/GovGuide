@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GovGuide</string>
+    <string name="default_test_url">https://www.googleapis.com/civicinfo/v2/representatives?address=111%20S%20Michigan%20Avenue,%20Chicago,%20IL&amp;key=</string>
+</resources>
