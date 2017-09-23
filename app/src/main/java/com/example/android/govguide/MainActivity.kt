@@ -7,19 +7,22 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.net.URL
+import com.example.android.govguide.data_objects.*
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
-    var repsJson = ""
+    var reps: Representatives? = null
     val api = Api()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (repsJson.equals("")) {
+        if (reps == null) {
             getResult()
         } else {
-            test_text.text = repsJson
+            //TODO
+            temp_view_json.text = "placeholder"
         }
     }
 
@@ -27,9 +30,11 @@ class MainActivity : AppCompatActivity() {
         doAsync {
             val url = URL(getString(R.string.default_test_url) +
                     api.getCivicInfoKey())
-            repsJson = url.readText()
+            val repsJson = url.readText()
+            reps = Gson().fromJson(repsJson, Representatives::class.java)
             uiThread {
-                test_text.text = repsJson
+                //TODO
+                temp_view_json.text = repsJson
             }
         }
     }
