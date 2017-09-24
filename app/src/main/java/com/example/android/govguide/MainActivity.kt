@@ -1,14 +1,9 @@
 package com.example.android.govguide
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import com.example.android.govguide.utils.Api
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -49,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             uiThread {
                 pb_loading_reps.visibility = View.INVISIBLE
                 val r = reps
-                
+
                 if (r != null) {
                     tv_err_msg.visibility = View.INVISIBLE
                     rv_reps.adapter = RepAdapter(r)
