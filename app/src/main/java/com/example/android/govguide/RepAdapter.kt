@@ -8,6 +8,7 @@ import com.example.android.govguide.data_objects.Address
 import com.example.android.govguide.data_objects.Office
 import com.example.android.govguide.data_objects.Official
 import com.example.android.govguide.data_objects.Representatives
+import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.representative_list_item.*
 
@@ -42,10 +43,13 @@ class RepAdapter(val reps: Representatives) : RecyclerView.Adapter<RepAdapter.Re
     class RepViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(official: Official, office: Office) {
             tv_name.text = official.name
-            tv_title.text = office.name
-            if (official.address != null) {
-                tv_contact.text = if (official.address.size > 0) addressAsString(official.address[0]) else ""
-            }
+            tv_title.text = office.name.replace("United States", "US")
+            Picasso
+                    .with(containerView.context)
+                    .load(official.photoUrl)
+                    .resize(250, 250)
+                    .centerCrop()
+                    .into(iv_rep_photo)
         }
 
         fun addressAsString(address: Address): String {
