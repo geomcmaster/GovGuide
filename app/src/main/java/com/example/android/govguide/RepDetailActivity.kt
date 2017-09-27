@@ -11,12 +11,13 @@ class RepDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rep_detail)
+
         val recievedIntent = intent
         val bundle = recievedIntent.extras
         tv_name.text = bundle.getString(getString(R.string.key_rep_name))
         tv_office.text = bundle.getString(getString(R.string.key_office))
         tv_party.text = "${bundle.getString(getString(R.string.key_party))} Party"
-        //TODO handle multiple items and empty items
+        //TODO handle multiple items
         //TODO add more info to this page
         val phones = bundle.getStringArray(getString(R.string.key_phone))
         val emails = bundle.getStringArray(getString(R.string.key_email))
@@ -28,5 +29,7 @@ class RepDetailActivity : AppCompatActivity() {
         tv_website.text =
                 if (websites.size > 0) Html.fromHtml("<a href=${websites[0]}> website ")
                 else "website not found"
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }
