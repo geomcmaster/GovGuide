@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.representative_list_item.*
  */
 class RepAdapter(val reps: Representatives, val onClickFun: (String, Official?) -> Unit) :
         RecyclerView.Adapter<RepAdapter.RepViewHolder>() {
-    val officials: MutableList<Pair<Office, Official>> = arrayListOf()
+    val officials: MutableList<Pair<Office, Official>> = mutableListOf()
     var selectedOfficial: Official?
     var onLongClickFun: (Official?) -> Unit
 
@@ -50,7 +50,7 @@ class RepAdapter(val reps: Representatives, val onClickFun: (String, Official?) 
 
     class RepViewHolder(override val containerView: View) :
             RecyclerView.ViewHolder(containerView), LayoutContainer, View.OnClickListener,
-            View.OnCreateContextMenuListener, View.OnLongClickListener {
+            View.OnCreateContextMenuListener {
         init {
             containerView.setOnClickListener(this)
             containerView.setOnCreateContextMenuListener(this)
@@ -63,6 +63,7 @@ class RepAdapter(val reps: Representatives, val onClickFun: (String, Official?) 
 
         override fun onCreateContextMenu(p0: ContextMenu?, p1: View?, p2: ContextMenu.ContextMenuInfo?) {
             MenuInflater(containerView.context).inflate(R.menu.contact, p0)
+            onLongClickFun(this.official)
         }
 
         fun bind(official: Official, office: Office, onClickFun: (String, Official?) -> Unit, onLongClickFun: (Official?) -> Unit) {
@@ -83,11 +84,6 @@ class RepAdapter(val reps: Representatives, val onClickFun: (String, Official?) 
 
         override fun onClick(p0: View?) {
             onClickFun(officeTitle, official)
-        }
-
-        override fun onLongClick(p0: View?): Boolean {
-            onLongClickFun(this.official)
-            return true
         }
 
         fun addressAsString(address: Address): String {

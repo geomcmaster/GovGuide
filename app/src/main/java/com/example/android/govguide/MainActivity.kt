@@ -19,6 +19,7 @@ import com.example.android.govguide.utils.Api
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 import java.net.URL
 
@@ -82,10 +83,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_call -> {
                     val phones = repAdapter.selectedOfficial?.phones
                     if (phones == null || phones.size < 1) {
+                        toast(getString(R.string.call_error))
                         return super.onContextItemSelected(item)
                     } else {
                         intent = Intent(Intent.ACTION_DIAL)
-                        intent.setData(Uri.parse(phones[0]))
+                        intent.setData(Uri.parse("tel:${phones[0]}"))
                         if (intent.resolveActivity(packageManager) != null) {
                             startActivity(intent)
                         }
@@ -94,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_email -> {
                     val emails = repAdapter.selectedOfficial?.emails
                     if (emails == null || emails.size < 1) {
+                        toast(getString(R.string.email_error))
                         return super.onContextItemSelected(item)
                     } else {
                         intent = Intent(Intent.ACTION_SENDTO)
