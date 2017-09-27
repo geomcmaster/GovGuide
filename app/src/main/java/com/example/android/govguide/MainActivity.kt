@@ -11,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import com.example.android.govguide.data_objects.Office
+import com.example.android.govguide.data_objects.Official
 import com.example.android.govguide.data_objects.Representatives
 import com.example.android.govguide.utils.Api
 import com.google.gson.Gson
@@ -25,6 +27,20 @@ class MainActivity : AppCompatActivity() {
     val api = Api()
     val sharedPrefChangeListener = { sharedPreferences: SharedPreferences, s: String ->
         getResult()
+    }
+    val onClickFun = { officeName: String, official: Official? ->
+        if (official != null) {
+            val b = Bundle()
+            b.putString(getString(R.string.key_rep_name), official.name ?: "")
+            b.putString(getString(R.string.key_office), officeName)
+            b.putString(getString(R.string.key_party), official.party ?: "")
+            b.putStringArray(getString(R.string.key_phone), official.phones ?: arrayOf())
+            b.putStringArray(getString(R.string.key_email), official.emails ?: arrayOf())
+            b.putStringArray(getString(R.string.key_website), official.urls ?: arrayOf())
+            val intent = Intent(this, RepDetailActivity::class.java)
+            intent.putExtras(b)
+            startActivity(intent)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         if (r == null) {
             getResult()
         } else {
-            rv_reps.adapter = RepAdapter(r)
+            rv_reps.adapter = RepAdapter(r, onClickFun)
         }
     }
 
@@ -116,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                         val r = reps
                         if (r != null) {
                             showRecyclerView()
-                            rv_reps.adapter = RepAdapter(r)
+                            rv_reps.adapter = RepAdapter(r, onClickFun)
                         } else {
                             showError()
                         }

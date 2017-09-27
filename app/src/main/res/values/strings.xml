@@ -10,4 +10,10 @@
     <string name="pref_location_key" translatable="false">location</string>
     <string name="settings">Settings</string>
     <string name="content_description_rep_photo">Photo of this elected official</string>
+    <string name="key_rep_name" translatable="false">rep name</string>
+    <string name="key_office" translatable="false">office</string>
+    <string name="key_party" translatable="false">party</string>
+    <string name="key_phone" translatable="false">phone</string>
+    <string name="key_email" translatable="false">email</string>
+    <string name="key_website" translatable="false">website</string>
 </resources>
