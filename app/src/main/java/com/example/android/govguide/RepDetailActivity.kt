@@ -15,7 +15,7 @@ class RepDetailActivity : AppCompatActivity() {
         val bundle = recievedIntent.extras
         tv_name.text = bundle.getString(getString(R.string.key_rep_name))
         tv_office.text = bundle.getString(getString(R.string.key_office))
-        tv_party.text = bundle.getString(getString(R.string.key_party))
+        tv_party.text = "${bundle.getString(getString(R.string.key_party))} Party"
         //TODO handle multiple items and empty items
         //TODO add more info to this page
         val phones = bundle.getStringArray(getString(R.string.key_phone))

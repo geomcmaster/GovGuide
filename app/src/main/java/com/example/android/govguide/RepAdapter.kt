@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.representative_list_item.*
 
-//TODO open contact menu on long press
 //https://developer.android.com/guide/topics/ui/menus.html#FloatingContextMenu
 /**
  * Created by Geoff on 9/23/2017.

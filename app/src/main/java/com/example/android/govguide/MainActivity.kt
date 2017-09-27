@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
                         toast(getString(R.string.call_error))
                         return super.onContextItemSelected(item)
                     } else {
+                        //TODO ask user to select a number if there's more than one
                         intent = Intent(Intent.ACTION_DIAL)
                         intent.setData(Uri.parse("tel:${phones[0]}"))
                         if (intent.resolveActivity(packageManager) != null) {
