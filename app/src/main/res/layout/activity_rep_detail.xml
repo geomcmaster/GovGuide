@@ -6,68 +6,87 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.govguide.RepDetailActivity">
 
-    <TextView
-        android:id="@+id/tv_name"
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Tammy Baldwin" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_office"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="2dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name"
-        tools:text="United States Senate" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_party"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="2dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_office"
-        tools:text="Democrat" />
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Tammy Baldwin" />
 
-    <TextView
-        android:id="@+id/tv_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="2dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_party"
-        tools:text="(555) 594-2345" />
+            <TextView
+                android:id="@+id/tv_office"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="2dp"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name"
+                tools:text="United States Senate" />
 
-    <TextView
-        android:id="@+id/tv_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="2dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_phone"
-        tools:text="sdsadsf@sdfsaf.com" />
+            <TextView
+                android:id="@+id/tv_party"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="2dp"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_office"
+                tools:text="Democrat" />
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_website"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="175dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email"
-        tools:text="www.tammybaldwin.com" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="phone"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="(555) 555-5555" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="email"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="abcdefgh@sdfasdg.com" />
+
+        <TextView
+            android:id="@+id/tv_website"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="web"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="https://www.reallylongwebsitenameysdsfsdepyepyep.com/coolcoolcool" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
