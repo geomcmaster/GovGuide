@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import com.example.android.govguide.data_objects.Office
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+    var repAdapter = RepAdapter(Representatives(arrayOf(), arrayOf()), onClickFun)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +70,43 @@ class MainActivity : AppCompatActivity() {
         if (r == null) {
             getResult()
         } else {
-            rv_reps.adapter = RepAdapter(r, onClickFun)
+            repAdapter = RepAdapter(r, onClickFun)
+            rv_reps.adapter = repAdapter
         }
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        if (repAdapter.selectedOfficial != null) {
+            when (item?.itemId) {
+                null -> return super.onContextItemSelected(item)
+                R.id.action_call -> {
+                    val phones = repAdapter.selectedOfficial?.phones
+                    if (phones == null || phones.size < 1) {
+                        return super.onContextItemSelected(item)
+                    } else {
+                        intent = Intent(Intent.ACTION_DIAL)
+                        intent.setData(Uri.parse(phones[0]))
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent)
+                        }
+                    }
+                }
+                R.id.action_email -> {
+                    val emails = repAdapter.selectedOfficial?.emails
+                    if (emails == null || emails.size < 1) {
+                        return super.onContextItemSelected(item)
+                    } else {
+                        intent = Intent(Intent.ACTION_SENDTO)
+                        intent.setData(Uri.parse("mailto:"))
+                        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emails[0]))
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent)
+                        }
+                    }
+                }
+            }
+        }
+        return super.onContextItemSelected(item)
     }
 
     override fun onDestroy() {
@@ -132,7 +169,8 @@ class MainActivity : AppCompatActivity() {
                         val r = reps
                         if (r != null) {
                             showRecyclerView()
-                            rv_reps.adapter = RepAdapter(r, onClickFun)
+                            repAdapter = RepAdapter(r, onClickFun)
+                            rv_reps.adapter = repAdapter
                         } else {
                             showError()
                         }

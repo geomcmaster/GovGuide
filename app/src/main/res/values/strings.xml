@@ -16,4 +16,6 @@
     <string name="key_phone" translatable="false">phone</string>
     <string name="key_email" translatable="false">email</string>
     <string name="key_website" translatable="false">website</string>
+    <string name="action_email">e-mai</string>
+    <string name="action_call">call</string>
 </resources>
