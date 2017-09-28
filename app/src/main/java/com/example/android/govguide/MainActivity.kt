@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                         return super.onContextItemSelected(item)
                     } else {
                         //TODO ask user to select a number if there's more than one
-                        intent = Intent(Intent.ACTION_DIAL)
+                        val intent = Intent(Intent.ACTION_DIAL)
                         intent.setData(Uri.parse("tel:${phones[0]}"))
                         if (intent.resolveActivity(packageManager) != null) {
                             startActivity(intent)
@@ -86,9 +86,22 @@ class MainActivity : AppCompatActivity() {
                         toast(getString(R.string.email_error))
                         return super.onContextItemSelected(item)
                     } else {
-                        intent = Intent(Intent.ACTION_SENDTO)
+                        val intent = Intent(Intent.ACTION_SENDTO)
                         intent.setData(Uri.parse("mailto:"))
                         intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emails[0]))
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent)
+                        }
+                    }
+                }
+                R.id.action_website -> {
+                    val websites = repAdapter.selectedOfficial?.urls
+                    if (websites == null || websites.size < 1) {
+                        toast(getString(R.string.website_error))
+                        return super.onContextItemSelected(item)
+                    } else {
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.setData(Uri.parse(websites[0]))
                         if (intent.resolveActivity(packageManager) != null) {
                             startActivity(intent)
                         }
@@ -105,24 +118,28 @@ class MainActivity : AppCompatActivity() {
                 .unregisterOnSharedPreferenceChangeListener(sharedPrefChangeListener)
     }
 
+    /*
+    FUNCTIONS FOR MODIFYING VISIBILITY
+     */
     fun showError() {
         pb_loading_reps.visibility = View.INVISIBLE
         tv_err_msg.visibility = View.VISIBLE
         rv_reps.visibility = View.INVISIBLE
     }
-
     fun showLoading() {
         tv_err_msg.visibility = View.INVISIBLE
         rv_reps.visibility = View.INVISIBLE
         pb_loading_reps.visibility = View.VISIBLE
     }
-
     fun showRecyclerView() {
         pb_loading_reps.visibility = View.INVISIBLE
         tv_err_msg.visibility = View.INVISIBLE
         rv_reps.visibility = View.VISIBLE
     }
 
+    /**
+     * Retrieves JSON data from API, parses it, and sets recycler view adapter
+     */
     fun getResult() {
         doAsync {
             uiThread {

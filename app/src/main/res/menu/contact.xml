@@ -6,4 +6,7 @@
     <item
         android:id="@+id/action_email"
         android:title="@string/action_email" />
+    <item
+        android:id="@+id/action_website"
+        android:title="@string/action_website" />
 </menu>

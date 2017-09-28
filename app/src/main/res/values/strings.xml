@@ -18,6 +18,8 @@
     <string name="key_website" translatable="false">website</string>
     <string name="action_email">e-mail</string>
     <string name="action_call">call</string>
+    <string name="action_website">website</string>
     <string name="call_error">No phone number found</string>
     <string name="email_error">No e-mail address found</string>
+    <string name="website_error">No website found</string>
 </resources>
