@@ -30,21 +30,7 @@ class MainActivity : AppCompatActivity() {
     val sharedPrefChangeListener = { sharedPreferences: SharedPreferences, s: String ->
         getResult()
     }
-    val onClickFun = { officeName: String, official: Official? ->
-        if (official != null) {
-            val b = Bundle()
-            b.putString(getString(R.string.key_rep_name), official.name ?: "")
-            b.putString(getString(R.string.key_office), officeName)
-            b.putString(getString(R.string.key_party), official.party ?: "")
-            b.putStringArray(getString(R.string.key_phone), official.phones ?: arrayOf())
-            b.putStringArray(getString(R.string.key_email), official.emails ?: arrayOf())
-            b.putStringArray(getString(R.string.key_website), official.urls ?: arrayOf())
-            val intent = Intent(this, RepDetailActivity::class.java)
-            intent.putExtras(b)
-            startActivity(intent)
-        }
-    }
-    var repAdapter = RepAdapter(Representatives(arrayOf(), arrayOf()), onClickFun)
+    var repAdapter = RepAdapter(Representatives(arrayOf(), arrayOf()))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         if (r == null) {
             getResult()
         } else {
-            repAdapter = RepAdapter(r, onClickFun)
+            repAdapter = RepAdapter(r)
             rv_reps.adapter = repAdapter
         }
     }
@@ -173,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                         val r = reps
                         if (r != null) {
                             showRecyclerView()
-                            repAdapter = RepAdapter(r, onClickFun)
+                            repAdapter = RepAdapter(r)
                             rv_reps.adapter = repAdapter
                         } else {
                             showError()

@@ -12,7 +12,7 @@ data class Office(val name: String, val divisionId: String, val levels: Array<St
 
 data class Source(val name: String, val official: Boolean)
 
-data class Official(val name: String, val address: Array<Address>, val party: String,
+data class Official(val name: String, val address: Array<Address>, val party: String = "",
                     val phones: Array<String>, val urls: Array<String>, val photoUrl: String,
                     val emails: Array<String>, val channels: Array<Channel>)
 
@@ -20,3 +20,16 @@ data class Address(val line1: String = "", val line2: String = "", val line3:Str
                    val state: String = "", val zip: String = "")
 
 data class Channel(val type: String, val id: String)
+
+/**
+ * Returns party affiliation in the form (D)/(R)
+ */
+fun String.getPartyAbbrev(): String {
+    return when (this.toLowerCase()) {
+        "republican" -> "(R)"
+        "democratic" -> "(D)"
+        "democrat" -> "(D)"
+        "independent" -> "(I)"
+        else -> ""
+    }
+}
