@@ -22,4 +22,6 @@
     <string name="call_error">No phone number found</string>
     <string name="email_error">No e-mail address found</string>
     <string name="website_error">No website found</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_closed">drawer closed</string>
 </resources>
