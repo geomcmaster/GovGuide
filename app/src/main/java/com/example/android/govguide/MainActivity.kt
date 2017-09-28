@@ -26,23 +26,30 @@ import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
-    //TODO use lateinit for some of these?
     var reps: Representatives? = null
     val api = Api()
     val sharedPrefChangeListener = { sharedPreferences: SharedPreferences, s: String ->
         getResult()
     }
-    var repAdapter = RepAdapter(Representatives(arrayOf(), arrayOf()))
+    //initialized in onCreate:
+    lateinit var repAdapter: RepAdapter
     lateinit var drawerToggle: ActionBarDrawerToggle
+    lateinit var activity: AppCompatActivity    //gets passed to ViewHolder so we can create context menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        activity = this
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(sharedPrefChangeListener)
+
+        //drawer//
         drawerToggle = ActionBarDrawerToggle(this, drawer_layout, R.string.drawer_open,
                 R.string.drawer_closed)
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_drawer)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_48px)
         drawerToggle.isDrawerIndicatorEnabled = true
 
         left_drawer.setAdapter(ArrayAdapter<String>(this, R.layout.drawer_list_item, resources.getStringArray(R.array.drawer_options)))
@@ -52,21 +59,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(sharedPrefChangeListener)
-
         drawer_layout
                 .addDrawerListener(drawerToggle)
+        //////////
 
+        //recycler view//
         rv_reps.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         val r = reps
         if (r == null) {
             getResult()
         } else {
-            repAdapter = RepAdapter(r)
+            repAdapter = RepAdapter(r, this)
             rv_reps.adapter = repAdapter
         }
+        /////////////////
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -179,8 +186,10 @@ class MainActivity : AppCompatActivity() {
             uiThread {
                 showLoading()
             }
+
             val userLoc = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
                     .getString(getString(R.string.pref_location_key), "")
+
             if (userLoc.isEmpty()) {
                 uiThread {
                     showError()
@@ -210,7 +219,7 @@ class MainActivity : AppCompatActivity() {
                         val r = reps
                         if (r != null) {
                             showRecyclerView()
-                            repAdapter = RepAdapter(r)
+                            repAdapter = RepAdapter(r, activity)
                             rv_reps.adapter = repAdapter
                         } else {
                             showError()

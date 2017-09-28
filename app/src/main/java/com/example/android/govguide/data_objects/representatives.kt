@@ -33,3 +33,12 @@ fun String.getPartyAbbrev(): String {
         else -> ""
     }
 }
+
+fun Address.addressAsString(): String {
+    return "${if (this.line1.equals("")) "" else this.line1 + "\n"}" +
+            "${if (this.line2.equals("")) "" else this.line2 + "\n"}" +
+            "${if (this.line3.equals("")) "" else this.line3 + "\n"}" +
+            "${if (this.city.equals("")) "" else this.city + ", "}" +
+            "${if (this.state.equals("")) "" else this.state + " "}" +
+            "${this.zip}"
+}
