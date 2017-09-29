@@ -1,5 +1,6 @@
 package com.example.android.govguide
 
+import android.app.ProgressDialog.show
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -11,12 +12,16 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
+import com.example.android.govguide.R.menu.contact
 import com.example.android.govguide.data_objects.Representatives
 import com.example.android.govguide.utils.Api
+import com.example.android.govguide.utils.safeStartActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -113,48 +118,86 @@ class MainActivity : AppCompatActivity() {
                 null -> return super.onContextItemSelected(item)
                 R.id.action_call -> {
                     val phones = repAdapter.selectedOfficial?.phones
-                    if (phones == null || phones.size < 1) {
-                        toast(getString(R.string.call_error))
-                        return super.onContextItemSelected(item)
-                    } else {
-                        //TODO ask user to select a number if there's more than one
-                        val intent = Intent(Intent.ACTION_DIAL)
-                        intent.setData(Uri.parse("tel:${phones[0]}"))
-                        if (intent.resolveActivity(packageManager) != null) {
-                            startActivity(intent)
+                    when {
+                        (phones == null || phones.size < 1) -> {
+                            toast(getString(R.string.call_error))
+                            return super.onContextItemSelected(item)
+                        }
+                        (phones.size == 1) -> {
+                            val intent = Intent(Intent.ACTION_DIAL)
+                            intent.setData(Uri.parse("tel:${phones[0]}"))
+                            intent.safeStartActivity(this)
+                        }
+                        (phones.size > 1) -> {
+                            userSelectOption(phones, item.itemId, Intent.ACTION_DIAL) {s, i ->
+                                i.setData(Uri.parse("tel:$i"))
+                            }
                         }
                     }
                 }
                 R.id.action_email -> {
                     val emails = repAdapter.selectedOfficial?.emails
-                    if (emails == null || emails.size < 1) {
-                        toast(getString(R.string.email_error))
-                        return super.onContextItemSelected(item)
-                    } else {
-                        val intent = Intent(Intent.ACTION_SENDTO)
-                        intent.setData(Uri.parse("mailto:"))
-                        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emails[0]))
-                        if (intent.resolveActivity(packageManager) != null) {
-                            startActivity(intent)
+                    when {
+                        (emails == null || emails.size < 1) -> {
+                            toast(getString(R.string.email_error))
+                            return super.onContextItemSelected(item)
+                        }
+                        (emails.size == 1) -> {
+                            val intent = Intent(Intent.ACTION_SENDTO)
+                            intent.setData(Uri.parse("mailto:"))
+                            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emails[0]))
+                            intent.safeStartActivity(this)
+                        }
+                        (emails.size > 1) -> {
+                            userSelectOption(emails, item.itemId, Intent.ACTION_SENDTO) {s, i ->
+                                i.setData(Uri.parse("mailto:"))
+                                i.putExtra(Intent.EXTRA_EMAIL, s)
+                            }
                         }
                     }
                 }
                 R.id.action_website -> {
                     val websites = repAdapter.selectedOfficial?.urls
-                    if (websites == null || websites.size < 1) {
-                        toast(getString(R.string.website_error))
-                        return super.onContextItemSelected(item)
-                    } else {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.setData(Uri.parse(websites[0]))
-                        if (intent.resolveActivity(packageManager) != null) {
-                            startActivity(intent)
+                    when {
+                        (websites == null || websites.size < 1) -> {
+                            toast(getString(R.string.website_error))
+                            return super.onContextItemSelected(item)
+                        }
+                        (websites.size == 1) -> {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.setData(Uri.parse(websites[0]))
+                            intent.safeStartActivity(this)
+                        }
+                        (websites.size > 1) -> {
+                            userSelectOption(websites, item.itemId, Intent.ACTION_VIEW) {s, i ->
+                                i.setData(Uri.parse(s))
+                            }
                         }
                     }
                 }
             }
         }
         return super.onContextItemSelected(item)
+    }
+
+    //TODO this needs to be tested. I couldn't find real examples with multiple results
+    /**
+     * Displays popup menu if there are multiple results for phone/email/website
+     */
+    fun userSelectOption(arr: Array<String>, id: Int, intentType: String,
+                         intentFun: (String, Intent) -> Unit) {
+        val popUpMenu = PopupMenu(this, findViewById(id))
+        popUpMenu.menuInflater.inflate(R.menu.contact_select, popUpMenu.menu)
+        for ((i, item) in arr.withIndex()) {
+            //populate menu
+            popUpMenu.menu.add(item)
+        }
+        popUpMenu.show()
+        popUpMenu.setOnMenuItemClickListener { item ->
+            val intent = Intent(intentType)
+            intentFun(item.title.toString(), intent)
+            intent.safeStartActivity(this)
+        }
     }
 
     /*
