@@ -9,4 +9,9 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
+    <style name="NavigationView">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black_54_percent</item>
+    </style>
+
 </resources>

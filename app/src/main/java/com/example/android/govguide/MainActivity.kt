@@ -54,10 +54,19 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_48px)
         drawerToggle.isDrawerIndicatorEnabled = true
 
-        left_drawer.setAdapter(ArrayAdapter<String>(this, R.layout.drawer_list_item, resources.getStringArray(R.array.drawer_options)))
-        left_drawer.setOnItemClickListener { adapterView, view, i, l ->
-            if (resources.getStringArray(R.array.drawer_options)[i].equals(getString(R.string.settings))) {
-                startActivity(Intent(this, SettingsActivity::class.java))
+        //TODO handle click
+//        left_drawer.setOnItemClickListener { adapterView, view, i, l ->
+//            if (resources.getStringArray(R.array.drawer_options)[i].equals(getString(R.string.settings))) {
+//                startActivity(Intent(this, SettingsActivity::class.java))
+//            }
+//        }
+        left_drawer.setNavigationItemSelectedListener { item ->
+            when (item.title) {
+                getString(R.string.settings) -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
             }
         }
 
