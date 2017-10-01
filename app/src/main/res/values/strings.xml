@@ -6,7 +6,9 @@
     <string name="default_test_location" translatable="false">111 S Michigan Avenue, Chicago, IL</string>
     <string name="key_param" translatable="false">key</string>
     <string name="err_no_reps">Check that you provided a valid location to see your representatives</string>
-    <string name="pref_location_label">Location</string>
+    <string name="pref_use_curr_loc_label">Use current location</string>
+    <string name="pref_use_curr_loc_key" translatable="false">curr loc</string>
+    <string name="pref_location_label">Set location</string>
     <string name="pref_location_key" translatable="false">location</string>
     <string name="settings">Settings</string>
     <string name="content_description_rep_photo">Photo of this elected official</string>

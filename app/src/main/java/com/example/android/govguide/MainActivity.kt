@@ -231,6 +231,7 @@ class MainActivity : AppCompatActivity() {
                     .getString(getString(R.string.pref_location_key), "")
 
             if (userLoc.isEmpty()) {
+                //TODO try to use user location?
                 uiThread {
                     showError()
                 }
