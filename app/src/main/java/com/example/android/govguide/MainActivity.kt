@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_48px)
         drawerToggle.isDrawerIndicatorEnabled = true
-        
+
         left_drawer.setNavigationItemSelectedListener { item ->
             when (item.title) {
                 getString(R.string.settings) -> {
@@ -94,13 +94,11 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                drawer_layout.openDrawer(GravityCompat.START)
-                //TODO get this to work
-//                if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-//                    drawer_layout.openDrawer(GravityCompat.START)
-//                } else {
-//                    drawer_layout.closeDrawer(GravityCompat.START)
-//                }
+                if (!drawer_layout.isDrawerOpen(GravityCompat.START)) {
+                    drawer_layout.openDrawer(GravityCompat.START)
+                } else {
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
