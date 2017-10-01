@@ -15,7 +15,6 @@ import android.support.v7.widget.PopupMenu
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
 import com.example.android.govguide.data_objects.Representatives
 import com.example.android.govguide.utils.Api
 import com.example.android.govguide.utils.safeStartActivity
@@ -53,13 +52,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_48px)
         drawerToggle.isDrawerIndicatorEnabled = true
-
-        //TODO handle click
-//        left_drawer.setOnItemClickListener { adapterView, view, i, l ->
-//            if (resources.getStringArray(R.array.drawer_options)[i].equals(getString(R.string.settings))) {
-//                startActivity(Intent(this, SettingsActivity::class.java))
-//            }
-//        }
+        
         left_drawer.setNavigationItemSelectedListener { item ->
             when (item.title) {
                 getString(R.string.settings) -> {
@@ -190,8 +183,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Displays popup menu if there are multiple results for phone/email/website
      */
-    fun userSelectOption(arr: Array<String>, id: Int, intentType: String,
-                         intentFun: (String, Intent) -> Unit) {
+    inline fun userSelectOption(arr: Array<String>, id: Int, intentType: String,
+                                crossinline intentFun: (String, Intent) -> Unit) {
         val popUpMenu = PopupMenu(this, findViewById(id))
         popUpMenu.menuInflater.inflate(R.menu.contact_select, popUpMenu.menu)
         for ((i, item) in arr.withIndex()) {
