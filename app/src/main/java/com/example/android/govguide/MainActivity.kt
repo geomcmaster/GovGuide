@@ -1,6 +1,5 @@
 package com.example.android.govguide
 
-import android.app.ProgressDialog.show
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -14,11 +13,9 @@ import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
-import com.example.android.govguide.R.menu.contact
 import com.example.android.govguide.data_objects.Representatives
 import com.example.android.govguide.utils.Api
 import com.example.android.govguide.utils.safeStartActivity
@@ -129,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                             intent.safeStartActivity(this)
                         }
                         (phones.size > 1) -> {
-                            userSelectOption(phones, item.itemId, Intent.ACTION_DIAL) {s, i ->
+                            userSelectOption(phones, item.itemId, Intent.ACTION_DIAL) { s, i ->
                                 i.setData(Uri.parse("tel:$i"))
                             }
                         }
@@ -149,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                             intent.safeStartActivity(this)
                         }
                         (emails.size > 1) -> {
-                            userSelectOption(emails, item.itemId, Intent.ACTION_SENDTO) {s, i ->
+                            userSelectOption(emails, item.itemId, Intent.ACTION_SENDTO) { s, i ->
                                 i.setData(Uri.parse("mailto:"))
                                 i.putExtra(Intent.EXTRA_EMAIL, s)
                             }
@@ -169,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                             intent.safeStartActivity(this)
                         }
                         (websites.size > 1) -> {
-                            userSelectOption(websites, item.itemId, Intent.ACTION_VIEW) {s, i ->
+                            userSelectOption(websites, item.itemId, Intent.ACTION_VIEW) { s, i ->
                                 i.setData(Uri.parse(s))
                             }
                         }
