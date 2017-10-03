@@ -1,11 +1,16 @@
 package com.example.android.govguide
 
+import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -18,6 +23,9 @@ import android.view.View
 import com.example.android.govguide.data_objects.Representatives
 import com.example.android.govguide.utils.Api
 import com.example.android.govguide.utils.safeStartActivity
+import com.example.android.govguide.utils.setPrefFromLocation
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -32,16 +40,20 @@ class MainActivity : AppCompatActivity() {
     val sharedPrefChangeListener = { sharedPreferences: SharedPreferences, s: String ->
         getResult()
     }
+    var locationClient: FusedLocationProviderClient? = null
+    val PERMISSIONS_REQUEST_LOCATION = 1
     //initialized in onCreate:
     lateinit var repAdapter: RepAdapter
     lateinit var drawerToggle: ActionBarDrawerToggle
     lateinit var activity: AppCompatActivity    //gets passed to ViewHolder so we can create context menu
+    lateinit var geoCoder: Geocoder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         activity = this
+        geoCoder = Geocoder(this)
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(sharedPrefChangeListener)
@@ -218,6 +230,32 @@ class MainActivity : AppCompatActivity() {
         rv_reps.visibility = View.VISIBLE
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            PERMISSIONS_REQUEST_LOCATION -> {
+                if (locationClient == null) {
+                    locationClient = LocationServices
+                            .getFusedLocationProviderClient(this)
+                }
+                val permission = ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                if (permission == PackageManager.PERMISSION_GRANTED) {
+                    locationClient?.lastLocation?.addOnSuccessListener { loc ->
+                        val context = this
+                        doAsync {
+                            setPrefFromLocation(context, geoCoder, loc)
+                        }
+                    }
+                } else if (permission == PackageManager.PERMISSION_DENIED) {
+                    if (PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+                            .getString(getString(R.string.pref_location_key), "").isEmpty()) {
+                        showError()
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Retrieves JSON data from API, parses it, and sets recycler view adapter
      */
@@ -231,9 +269,22 @@ class MainActivity : AppCompatActivity() {
                     .getString(getString(R.string.pref_location_key), "")
 
             if (userLoc.isEmpty()) {
-                //TODO try to use user location?
-                uiThread {
-                    showError()
+                if (locationClient == null) {
+                    locationClient = LocationServices
+                            .getFusedLocationProviderClient(activity)
+                }
+                val permission = ContextCompat.checkSelfPermission(activity,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                if (permission == PackageManager.PERMISSION_GRANTED) {
+                    locationClient?.lastLocation?.addOnSuccessListener { loc ->
+                        doAsync {
+                            setPrefFromLocation(activity, geoCoder, loc)
+                        }
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(activity,
+                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                            PERMISSIONS_REQUEST_LOCATION)
                 }
             } else {
                 val urlString = Uri.parse(getString(R.string.google_civic_info_base_url))
