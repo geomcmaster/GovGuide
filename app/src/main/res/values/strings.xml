@@ -27,4 +27,11 @@
     <string name="drawer_open">drawer open</string>
     <string name="drawer_closed">drawer closed</string>
     <string name="loc_permission_denied_error">Unable to use current location</string>
+    <string name="legislation">Legislation</string>
+    <string name="representatives">Representatives</string>
+    <string name="vote">vote</string>
+    <string name="yea">Yea</string>
+    <string name="nay">Nay</string>
+    <string name="present">Present</string>
+    <string name="not_voting">Not Voting</string>
 </resources>
