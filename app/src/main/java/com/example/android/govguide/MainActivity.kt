@@ -67,6 +67,14 @@ class MainActivity : AppCompatActivity() {
 
         left_drawer.setNavigationItemSelectedListener { item ->
             when (item.title) {
+                getString(R.string.representatives) -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    true
+                }
+                getString(R.string.legislation) -> {
+                    startActivity(Intent(this, LegislationActivity::class.java))
+                    true
+                }
                 getString(R.string.settings) -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
                     true

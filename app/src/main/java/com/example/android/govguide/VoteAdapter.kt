@@ -19,8 +19,8 @@ class VoteAdapter(val results: Results, val activity: AppCompatActivity) : Recyc
                 .inflate(R.layout.legislation_list_item, parent, false), activity)
     }
 
-    override fun onBindViewHolder(holder: VoteViewHolder?, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onBindViewHolder(holder: VoteViewHolder, position: Int) {
+        holder.bind(results.votes[position])
     }
 
     override fun getItemCount(): Int {
