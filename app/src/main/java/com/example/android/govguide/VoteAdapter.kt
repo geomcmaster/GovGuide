@@ -34,7 +34,10 @@ class VoteAdapter(val results: Results, val activity: AppCompatActivity) : Recyc
             activity.tv_bill_name.text = vote.bill.title
             activity.tv_chamber.text = vote.chamber
             activity.tv_result.text = vote.result
-            
+            activity.tv_yea_count.text = vote.total.yes.toString()
+            activity.tv_nay_count.text = vote.total.no.toString()
+            activity.tv_present_count.text = vote.total.present.toString()
+            activity.tv_not_voting_count.text = vote.total.not_voting.toString()
         }
     }
 }
