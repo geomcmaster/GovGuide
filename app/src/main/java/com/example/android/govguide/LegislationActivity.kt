@@ -1,47 +1,46 @@
 package com.example.android.govguide
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.MenuItem
-import com.example.android.govguide.data_objects.Representatives
+import android.view.View
 import com.example.android.govguide.data_objects.Results
-import com.example.android.govguide.utils.setPrefFromLocation
-import com.google.android.gms.location.LocationServices
+import com.example.android.govguide.utils.Api
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_legislation.drawer_layout
-import kotlinx.android.synthetic.main.activity_legislation.left_drawer
-import kotlinx.android.synthetic.main.activity_legislation.rv_leg
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_legislation.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.net.URL
 
 class LegislationActivity : AppCompatActivity() {
 
+    val api = Api()
     var leg: Results? = null
 
     lateinit var drawerToggle: ActionBarDrawerToggle
     lateinit var voteAdapter: VoteAdapter
+    lateinit var activity: AppCompatActivity    //gets passed to ViewHolder so we can create context menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_legislation)
 
+        activity = this
+
         //drawer//
-        drawerToggle = ActionBarDrawerToggle(this, drawer_layout, R.string.drawer_open,
+        drawerToggle = ActionBarDrawerToggle(this, drawer_layout_leg, R.string.drawer_open,
                 R.string.drawer_closed)
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_48px)
         drawerToggle.isDrawerIndicatorEnabled = true
 
-        left_drawer.setNavigationItemSelectedListener { item ->
+        left_drawer_leg.setNavigationItemSelectedListener { item ->
             when (item.title) {
                 getString(R.string.representatives) -> {
                     startActivity(Intent(this, MainActivity::class.java))
@@ -59,7 +58,7 @@ class LegislationActivity : AppCompatActivity() {
             }
         }
 
-        drawer_layout
+        drawer_layout_leg
                 .addDrawerListener(drawerToggle)
         //////////
 
@@ -79,10 +78,10 @@ class LegislationActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                if (!drawer_layout.isDrawerOpen(GravityCompat.START)) {
-                    drawer_layout.openDrawer(GravityCompat.START)
+                if (!drawer_layout_leg.isDrawerOpen(GravityCompat.START)) {
+                    drawer_layout_leg.openDrawer(GravityCompat.START)
                 } else {
-                    drawer_layout.closeDrawer(GravityCompat.START)
+                    drawer_layout_leg.closeDrawer(GravityCompat.START)
                 }
             }
         }
@@ -94,5 +93,57 @@ class LegislationActivity : AppCompatActivity() {
      */
     fun getResult() {
         //TODO implement
+        doAsync {
+            uiThread {
+                showLoading()
+            }
+
+            //TODO need to use a header
+            val url = URL(getString(R.string.propublica_vote_base_url))
+            var legJson = ""
+            try {
+                legJson = url.readText()
+            } catch (e: Exception) {
+                Log.e("CongressApi", "Error reading from url", e)
+            }
+            if (legJson.isEmpty()) {
+                uiThread {
+                    showError()
+                }
+            } else {
+                leg = Gson().fromJson(legJson, Results::class.java)
+                uiThread {
+                    val l = leg
+                    if (l != null) {
+                        showRecyclerView()
+                        voteAdapter = VoteAdapter(l, activity)
+                        rv_leg.adapter = voteAdapter
+                    } else {
+                        showError()
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+    FUNCTIONS FOR MODIFYING VISIBILITY
+    */
+    fun showError() {
+        pb_loading_leg.visibility = View.INVISIBLE
+        tv_leg_err_msg.visibility = View.VISIBLE
+        rv_leg.visibility = View.INVISIBLE
+    }
+
+    fun showLoading() {
+        tv_leg_err_msg.visibility = View.INVISIBLE
+        rv_leg.visibility = View.INVISIBLE
+        pb_loading_leg.visibility = View.VISIBLE
+    }
+
+    fun showRecyclerView() {
+        pb_loading_leg.visibility = View.INVISIBLE
+        tv_leg_err_msg.visibility = View.INVISIBLE
+        rv_leg.visibility = View.VISIBLE
     }
 }

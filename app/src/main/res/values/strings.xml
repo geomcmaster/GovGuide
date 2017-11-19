@@ -2,6 +2,7 @@
     <string name="app_name">GovGuide</string>
     <string name="default_test_url" translatable="false">https://www.googleapis.com/civicinfo/v2/representatives?address=111%20S%20Michigan%20Avenue,%20Chicago,%20IL&amp;key=</string>
     <string name="google_civic_info_base_url" translatable="false">https://www.googleapis.com/civicinfo/v2/representatives</string>
+    <string name="propublica_vote_base_url" translatable="false">https://api.propublica.org/congress/v1/both/votes/recent.json</string>
     <string name="address_param" translatable="false">address</string>
     <string name="default_test_location" translatable="false">111 S Michigan Avenue, Chicago, IL</string>
     <string name="key_param" translatable="false">key</string>
@@ -34,4 +35,5 @@
     <string name="nay">Nay</string>
     <string name="present">Present</string>
     <string name="not_voting">Not Voting</string>
+    <string name="err_no_leg">Unable to find legislation</string>
 </resources>
