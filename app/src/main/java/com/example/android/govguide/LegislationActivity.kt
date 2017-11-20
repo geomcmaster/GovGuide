@@ -11,9 +11,12 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import com.example.android.govguide.data_objects.Results
+import com.example.android.govguide.data_objects.Votes
 import com.example.android.govguide.utils.Api
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_legislation.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.net.URL
@@ -21,7 +24,7 @@ import java.net.URL
 class LegislationActivity : AppCompatActivity() {
 
     val api = Api()
-    var leg: Results? = null
+    var leg: Votes? = null
 
     lateinit var drawerToggle: ActionBarDrawerToggle
     lateinit var voteAdapter: VoteAdapter
@@ -92,26 +95,24 @@ class LegislationActivity : AppCompatActivity() {
      * Retrieves JSON data from API, parses it, and sets recycler view adapter
      */
     fun getResult() {
-        //TODO implement
         doAsync {
             uiThread {
                 showLoading()
             }
 
-            //TODO need to use a header
-            val url = URL(getString(R.string.propublica_vote_base_url))
-            var legJson = ""
-            try {
-                legJson = url.readText()
-            } catch (e: Exception) {
-                Log.e("CongressApi", "Error reading from url", e)
-            }
-            if (legJson.isEmpty()) {
+            val client = OkHttpClient()
+            val req = Request.Builder()
+                    .header(getString(R.string.api_header_field), api.getCongressKey())
+                    .url(getString(R.string.propublica_vote_base_url))
+                    .build()
+            val response = client.newCall(req).execute();
+            val responseBody = response.body()
+            if (!response.isSuccessful || responseBody == null) {
                 uiThread {
                     showError()
                 }
             } else {
-                leg = Gson().fromJson(legJson, Results::class.java)
+                leg = Gson().fromJson(responseBody.charStream(), Votes::class.java)
                 uiThread {
                     val l = leg
                     if (l != null) {

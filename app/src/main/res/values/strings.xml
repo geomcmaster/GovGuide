@@ -36,4 +36,5 @@
     <string name="present">Present</string>
     <string name="not_voting">Not Voting</string>
     <string name="err_no_leg">Unable to find legislation</string>
+    <string name="api_header_field" translatable="false">X-API-Key</string>
 </resources>
