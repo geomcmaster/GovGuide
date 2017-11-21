@@ -7,8 +7,8 @@ data class Votes(val results: Results)
 
 data class Results(val num_results: Int, val votes: Array<Vote>)
 
-data class Vote(val chamber: String, val bill: Bill, val question: String = "",
-                val description: String = "", val result: String, val total: Count)
+data class Vote(val chamber: String = "", val bill: Bill = Bill(), val question: String = "",
+                val description: String = "", val result: String = "", val total: Count)
 
 data class Bill(val number: String = "", val title: String = "")
 

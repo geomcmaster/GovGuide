@@ -36,7 +36,7 @@ class VoteAdapter(val votes: Votes, val activity: AppCompatActivity) : RecyclerV
             RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(vote: Vote) {
             tv_bill_number.text = vote.bill.number
-            if (!vote.bill.title.isEmpty()) {
+            if (vote.bill.title != null && !vote.bill.title.isEmpty()) {
                 tv_bill_name.text = vote.bill.title
             } else {
                 tv_bill_name.text = vote.description
