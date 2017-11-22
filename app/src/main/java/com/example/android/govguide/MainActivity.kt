@@ -249,9 +249,17 @@ class MainActivity : AppCompatActivity() {
                         Manifest.permission.ACCESS_FINE_LOCATION)
                 if (permission == PackageManager.PERMISSION_GRANTED) {
                     locationClient?.lastLocation?.addOnSuccessListener { loc ->
-                        val context = this
-                        doAsync {
-                            setPrefFromLocation(context, geoCoder, loc)
+                        if (loc == null &&
+                                PreferenceManager
+                                        .getDefaultSharedPreferences(this@MainActivity)
+                                        .getString(getString(R.string.pref_location_key), "")
+                                        .isEmpty()) {
+                            showError()
+                        } else {
+                            val context = this
+                            doAsync {
+                                setPrefFromLocation(context, geoCoder, loc)
+                            }
                         }
                     }
                 } else if (permission == PackageManager.PERMISSION_DENIED) {
@@ -285,7 +293,11 @@ class MainActivity : AppCompatActivity() {
                         Manifest.permission.ACCESS_FINE_LOCATION)
                 if (permission == PackageManager.PERMISSION_GRANTED) {
                     locationClient?.lastLocation?.addOnSuccessListener { loc ->
-                        doAsync {
+                        if (loc == null) {
+                            uiThread {
+                                showError()
+                            }
+                        } else {
                             setPrefFromLocation(activity, geoCoder, loc)
                         }
                     }

@@ -80,7 +80,9 @@ class RepAdapter(val reps: Representatives, val activity: AppCompatActivity) :
             this.official = official
             officeTitle = office.name.replace("United States", "US")
             this.onClickFun = onClickFun
-            tv_name.text = "${official.name} ${official.party.getPartyAbbrev()}"
+            val name = if (official.name == null) "" else official.name
+            val party = if (official.party == null) "" else official.party.getPartyAbbrev()
+            tv_name.text = "$name $party"
             tv_title.text = officeTitle
             Picasso
                     .with(containerView.context)

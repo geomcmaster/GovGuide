@@ -65,9 +65,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             Manifest.permission.ACCESS_FINE_LOCATION)
                     if (permission == PackageManager.PERMISSION_GRANTED) {
                         locationClient?.lastLocation?.addOnSuccessListener { loc ->
-                            val context = this.context
-                            doAsync {
-                                setPrefFromLocation(context, geoCoder, loc)
+                            if (loc != null) {
+                                val context = this.context
+                                doAsync {
+                                    setPrefFromLocation(context, geoCoder, loc)
+                                }
                             }
                         }
                     } else {
